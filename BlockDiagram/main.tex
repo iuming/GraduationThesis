@@ -1,0 +1,31 @@
+\documentclass{article}
+\usepackage{ctex}
+\usepackage{tikz}
+\usetikzlibrary{positioning, shapes.geometric}
+
+\begin{document}
+\begin{tikzpicture}[node distance=10pt]
+  \node[draw, rounded corners]                        (start)   {开始};
+  \node[draw, below=of start]                         (step 1)  {导入数据};
+  \node[draw, below=of step 1]                        (step 2)  {计算Kriging插值重构辐射场};
+  \node[draw, below=of step 2]                        (step 3)  {计算Splines插值重构辐射场};
+  \node[draw, below=of step 3]                        (step 4)  {计算两个重构辐射场的偏差};
+  \node[draw, diamond, aspect=6, below=of step 4]     (choice)  {偏差值是否大于设定值};
+  \node[draw, right=20pt of choice]                   (step x)  {添加测量数据};
+  \node[draw, below=20pt of choice]                   (step 5)  {绘制空间辐射场};
+  \node[draw, below=of step 5]                        (step 6)  {计算整体偏差};
+  \node[draw, rounded corners, below=of step 6]       (end)     {结束};
+
+  \draw[->] (start)  -- (step 1);
+  \draw[->] (step 1) -- (step 2);
+  \draw[->] (step 2) -- (step 3);
+  \draw[->] (step 3) -- (step 4);
+  \draw[->] (step 4) -- (choice);
+  \draw[->] (choice) -- (step 5);
+  \draw[->] (choice) -- node[left]  {否} (step 5);
+  \draw[->] (choice) -- node[above] {是}  (step x);
+  \draw[->] (step 5) -- (step 6);
+  \draw[->] (step x) -- (step x|-step 1) -> (step 1);
+  \draw[->] (step 6) -- (end);
+\end{tikzpicture}
+\end{document}
